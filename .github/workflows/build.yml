@@ -1,0 +1,35 @@
+name: Build mod
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - module: fabric-1.21
+            java: 21
+            gradle: '8.12'
+          - module: fabric-26.3
+            java: 25
+            gradle: '9.4.0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ matrix.gradle }}
+      - name: Build jar
+        working-directory: ${{ matrix.module }}
+        run: gradle build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: newgen-${{ matrix.module }}
+          path: ${{ matrix.module }}/build/libs/*.jar
