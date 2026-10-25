@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Implementation-Title: NewGen Client
+Implementation-Vendor: NewGen
+Specification-Title: NewGen Client for Minecraft 26.3
+Specification-Vendor: NewGen

@@ -1,0 +1,48 @@
+plugins {
+    // 26.x obfuskatsiyasiz: remap qilmaydigan Loom plagini (Java 25, Gradle 9.4+ kerak)
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
+}
+
+if (project.fabric_version.startsWith('FILL')) {
+    throw new GradleException('gradle.properties ichida fabric_version ni 26.3 uchun to\'ldiring (modrinth.com/mod/fabric-api/versions).')
+}
+
+version = project.mod_version
+group = 'uz.newgen'
+base { archivesName = "newgen-client-fabric-${project.minecraft_version}" }
+
+// Versiyadan mustaqil yadro manbasi shu jar ichiga qo'shiladi.
+sourceSets.main.java.srcDir '../core/src/main/java'
+
+repositories {
+    maven { url = 'https://maven.fabricmc.net/' }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand 'version': project.version }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 25
+    it.options.encoding = 'UTF-8'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+    manifest {
+        from('manifest/MANIFEST.MF')
+        attributes('Implementation-Version': project.version)
+    }
+}

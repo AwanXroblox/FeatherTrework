@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "uz.newgen.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["MinecraftAccessor"],
+  "injectors": { "defaultRequire": 1 }
+}
